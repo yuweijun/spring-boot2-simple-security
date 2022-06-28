@@ -6,4 +6,5 @@ rootProject.name = 'spring-boot2-simple-security'
 
 include(':spring-boot2-simple-security-v1')
 include(':spring-boot2-simple-security-v2')
+include(':spring-boot2-simple-security-v3')
 
