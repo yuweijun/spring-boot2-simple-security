@@ -2,6 +2,8 @@ package com.example.spring.boot2.simple.security.v4.web.authentication.ui;
 
 import com.example.spring.boot2.simple.security.v4.web.util.matcher.RegexRequestMatcher;
 import com.example.spring.boot2.simple.security.v4.web.util.matcher.RequestMatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -19,15 +21,16 @@ import java.util.function.Function;
  */
 public class DefaultLogoutPageGeneratingFilter extends OncePerRequestFilter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultLogoutPageGeneratingFilter.class);
+
     private RequestMatcher matcher = new RegexRequestMatcher("/logout", "GET");
 
     private Function<HttpServletRequest, Map<String, String>> resolveHiddenInputs = request -> Collections.emptyMap();
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-        HttpServletResponse response, FilterChain filterChain)
-        throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (this.matcher.matches(request)) {
+            LOGGER.info("render HTML of logout page for : {}", request.getRequestURI());
             renderLogout(request, response);
         } else {
             filterChain.doFilter(request, response);
@@ -62,12 +65,6 @@ public class DefaultLogoutPageGeneratingFilter extends OncePerRequestFilter {
         response.getWriter().write(page);
     }
 
-    /**
-     * Sets a Function used to resolve a Map of the hidden inputs where the key is the name of the input and the value is the value of the input. Typically this is used to resolve
-     * the CSRF token.
-     *
-     * @param resolveHiddenInputs the function to resolve the inputs
-     */
     public void setResolveHiddenInputs(
         Function<HttpServletRequest, Map<String, String>> resolveHiddenInputs) {
         Assert.notNull(resolveHiddenInputs, "resolveHiddenInputs cannot be null");

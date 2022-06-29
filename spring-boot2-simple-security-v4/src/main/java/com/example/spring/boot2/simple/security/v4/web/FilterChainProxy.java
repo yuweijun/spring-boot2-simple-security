@@ -29,7 +29,7 @@ public class FilterChainProxy extends GenericFilterBean {
         List<Filter> filters = getFilters((HttpServletRequest) request);
 
         if (filters.size() == 0) {
-            LOGGER.info("filter size is 0 for request : ", ((HttpServletRequest) request).getRequestURI());
+            LOGGER.info("filter size is 0 for request : {}", ((HttpServletRequest) request).getRequestURI());
             chain.doFilter(request, response);
 
             return;

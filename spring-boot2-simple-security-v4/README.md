@@ -1,7 +1,12 @@
 # core classes
 
+AnyRequestMatcher
+CompositeLogoutHandler
 LogoutFilter
-AuthenticationProvider
+LogoutHandler
+LogoutSuccessHandler
+SecurityContextLogoutHandler
+SimpleUrlLogoutSuccessHandler
 DefaultLoginPageGeneratingFilter
 DefaultLogoutPageGeneratingFilter
 SimpleUrlAuthenticationSuccessHandler
@@ -10,6 +15,9 @@ AuthenticationSuccessHandler
 DefaultLoginPageGeneratingFilter
 DefaultLogoutPageGeneratingFilter
 UsernamePasswordAuthenticationFilter
+HttpSessionSecurityContextRepository
+SecurityContextRepository
+AuthenticationProvider
  
 # request mapping to "POST /login" config
 

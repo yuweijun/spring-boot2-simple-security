@@ -12,7 +12,12 @@ import com.example.spring.boot2.simple.security.v4.web.authentication.filter.Exc
 import com.example.spring.boot2.simple.security.v4.web.authentication.filter.RequestCacheAwareFilter;
 import com.example.spring.boot2.simple.security.v4.web.authentication.filter.SecurityContextPersistenceFilter;
 import com.example.spring.boot2.simple.security.v4.web.authentication.filter.UsernamePasswordAuthenticationFilter;
+import com.example.spring.boot2.simple.security.v4.web.authentication.logout.LogoutFilter;
+import com.example.spring.boot2.simple.security.v4.web.authentication.logout.SecurityContextLogoutHandler;
+import com.example.spring.boot2.simple.security.v4.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 import com.example.spring.boot2.simple.security.v4.web.authentication.ui.DefaultLoginPageGeneratingFilter;
+import com.example.spring.boot2.simple.security.v4.web.authentication.ui.DefaultLogoutPageGeneratingFilter;
+import com.example.spring.boot2.simple.security.v4.web.util.matcher.AnyRequestMatcher;
 import com.example.spring.boot2.simple.security.v4.web.util.matcher.RegexRequestMatcher;
 import com.example.spring.boot2.simple.security.v4.web.util.matcher.RequestMatcher;
 import org.slf4j.Logger;
@@ -36,6 +41,8 @@ public class WebSecurityConfiguration {
 
     public static final int DEFAULT_FILTER_ORDER = OrderedFilter.REQUEST_WRAPPER_FILTER_MAX_ORDER - 100;
 
+    private static final String GET_METHOD = RequestMethod.GET.name();
+
     /**
      * below filters is not extend from {@link org.springframework.web.filter.OncePerRequestFilter}, it will be added to filterChain if decleared as @Bean
      */
@@ -48,6 +55,14 @@ public class WebSecurityConfiguration {
     private final SecurityContextPersistenceFilter securityContextPersistenceFilter = new SecurityContextPersistenceFilter();
 
     private final DefaultLoginPageGeneratingFilter defaultLoginPageGeneratingFilter = new DefaultLoginPageGeneratingFilter(usernamePasswordAuthenticationFilter);
+
+    private final DefaultLogoutPageGeneratingFilter defaultLogoutPageGeneratingFilter = new DefaultLogoutPageGeneratingFilter();
+
+    private final  SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
+
+    private final SimpleUrlLogoutSuccessHandler simpleUrlLogoutSuccessHandler = new SimpleUrlLogoutSuccessHandler();
+
+    private final LogoutFilter logoutFilter = new LogoutFilter(simpleUrlLogoutSuccessHandler, securityContextLogoutHandler);
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -117,7 +132,9 @@ public class WebSecurityConfiguration {
         List<Filter> authorizeFilters = new ArrayList<>();
         authorizeFilters.add(securityContextPersistenceFilter);
         authorizeFilters.add(exceptionTranslationFilter);
+        authorizeFilters.add(logoutFilter);
         authorizeFilters.add(defaultLoginPageGeneratingFilter);
+        authorizeFilters.add(defaultLogoutPageGeneratingFilter);
         authorizeFilters.add(requestCacheAwareFilter);
 
         for (RequestMatcher authorizeRequest : authorizeRequestMatchers) {
@@ -129,9 +146,12 @@ public class WebSecurityConfiguration {
 
     private List<RequestMatcher> getAuthorizeRequestMatchers() {
         List<RequestMatcher> authorizeRequestMatchers = new ArrayList<>();
-        authorizeRequestMatchers.add(new RegexRequestMatcher("/login", RequestMethod.GET.name()));
-        authorizeRequestMatchers.add(new RegexRequestMatcher("/user", RequestMethod.GET.name()));
-        authorizeRequestMatchers.add(new RegexRequestMatcher("/authentication", RequestMethod.GET.name()));
+        authorizeRequestMatchers.add(new RegexRequestMatcher("/login", GET_METHOD));
+        authorizeRequestMatchers.add(new RegexRequestMatcher("/logout", GET_METHOD));
+        authorizeRequestMatchers.add(new RegexRequestMatcher("/user", GET_METHOD));
+        authorizeRequestMatchers.add(new RegexRequestMatcher("/authentication", GET_METHOD));
+
+        authorizeRequestMatchers.add(AnyRequestMatcher.INSTANCE);
         return authorizeRequestMatchers;
     }
 

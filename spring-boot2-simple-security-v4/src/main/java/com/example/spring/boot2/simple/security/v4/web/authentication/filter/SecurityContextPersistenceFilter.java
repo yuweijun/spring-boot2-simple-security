@@ -1,7 +1,7 @@
 package com.example.spring.boot2.simple.security.v4.web.authentication.filter;
 
 import com.example.spring.boot2.simple.security.v4.core.context.SecurityContextHolder;
-import com.example.spring.boot2.simple.security.v4.web.authentication.AuthenticationSessionRepository;
+import com.example.spring.boot2.simple.security.v4.web.context.HttpSessionSecurityContextRepository;
 import com.example.spring.boot2.simple.security.v4.core.context.SecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +19,14 @@ public class SecurityContextPersistenceFilter extends GenericFilterBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityContextPersistenceFilter.class);
 
-    private AuthenticationSessionRepository sessionRepository = new AuthenticationSessionRepository();
+    private HttpSessionSecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         try {
-            SecurityContext contextBeforeChainExecution = sessionRepository.loadContext(request);
+            SecurityContext contextBeforeChainExecution = securityContextRepository.loadContext(request);
             if (contextBeforeChainExecution != null) {
                 LOGGER.info("load context before chain execution : {}", contextBeforeChainExecution);
                 SecurityContextHolder.setContext(contextBeforeChainExecution);
@@ -40,7 +40,7 @@ public class SecurityContextPersistenceFilter extends GenericFilterBean {
 
             // Crucial removal of SecurityContextHolder contents - do this before anything else.
             SecurityContextHolder.clearContext();
-            sessionRepository.saveContext(contextAfterChainExecution, request, response);
+            securityContextRepository.saveContext(contextAfterChainExecution, request, response);
         }
     }
 

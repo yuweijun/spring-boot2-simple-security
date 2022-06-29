@@ -16,7 +16,7 @@ public class DefaultRedirectStrategy {
 
     public void sendRedirect(HttpServletRequest request, HttpServletResponse response, String redirectUrl) throws IOException {
         String url = response.encodeRedirectURL(redirectUrl);
-        LOGGER.info("Redirecting to '" + url + "'");
+        LOGGER.info("Redirecting to '{}'", url);
 
         response.sendRedirect(url);
     }
