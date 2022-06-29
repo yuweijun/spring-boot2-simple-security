@@ -3,7 +3,7 @@ package com.example.spring.boot2.simple.security.v3.web.authentication.filter;
 import com.example.spring.boot2.simple.security.v3.core.Authentication;
 import com.example.spring.boot2.simple.security.v3.core.context.SecurityContextHolder;
 import com.example.spring.boot2.simple.security.v3.web.authentication.AuthenticationManager;
-import com.example.spring.boot2.simple.security.v3.web.authentication.AuthenticationSuccessHandler;
+import com.example.spring.boot2.simple.security.v3.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import com.example.spring.boot2.simple.security.v3.web.util.matcher.RegexRequestMatcher;
 import com.example.spring.boot2.simple.security.v3.core.AuthenticationException;
 import com.example.spring.boot2.simple.security.v3.core.UsernamePasswordAuthenticationToken;
@@ -28,7 +28,7 @@ public class UsernamePasswordAuthenticationFilter extends GenericFilterBean {
 
     private AuthenticationManager authenticationManager;
 
-    private AuthenticationSuccessHandler successHandler = new AuthenticationSuccessHandler();
+    private SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
 
     private AuthenticationFailureHandler failureHandler = new AuthenticationFailureHandler();
 

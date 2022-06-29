@@ -12,6 +12,7 @@ import com.example.spring.boot2.simple.security.v4.web.authentication.filter.Exc
 import com.example.spring.boot2.simple.security.v4.web.authentication.filter.RequestCacheAwareFilter;
 import com.example.spring.boot2.simple.security.v4.web.authentication.filter.SecurityContextPersistenceFilter;
 import com.example.spring.boot2.simple.security.v4.web.authentication.filter.UsernamePasswordAuthenticationFilter;
+import com.example.spring.boot2.simple.security.v4.web.authentication.ui.DefaultLoginPageGeneratingFilter;
 import com.example.spring.boot2.simple.security.v4.web.util.matcher.RegexRequestMatcher;
 import com.example.spring.boot2.simple.security.v4.web.util.matcher.RequestMatcher;
 import org.slf4j.Logger;
@@ -45,6 +46,8 @@ public class WebSecurityConfiguration {
     private final UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter = new UsernamePasswordAuthenticationFilter();
 
     private final SecurityContextPersistenceFilter securityContextPersistenceFilter = new SecurityContextPersistenceFilter();
+
+    private final DefaultLoginPageGeneratingFilter defaultLoginPageGeneratingFilter = new DefaultLoginPageGeneratingFilter(usernamePasswordAuthenticationFilter);
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -91,6 +94,7 @@ public class WebSecurityConfiguration {
         LOGGER.info("config bean : {}", DEFAULT_FILTER_NAME);
         final FilterChainProxy filterChainProxy = new FilterChainProxy();
         usernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManager());
+        usernamePasswordAuthenticationFilter.setContinueChainBeforeSuccessfulAuthentication(true);
         filterChainProxy.setChains(getFilterChains());
         return filterChainProxy;
     }
@@ -113,6 +117,7 @@ public class WebSecurityConfiguration {
         List<Filter> authorizeFilters = new ArrayList<>();
         authorizeFilters.add(securityContextPersistenceFilter);
         authorizeFilters.add(exceptionTranslationFilter);
+        authorizeFilters.add(defaultLoginPageGeneratingFilter);
         authorizeFilters.add(requestCacheAwareFilter);
 
         for (RequestMatcher authorizeRequest : authorizeRequestMatchers) {

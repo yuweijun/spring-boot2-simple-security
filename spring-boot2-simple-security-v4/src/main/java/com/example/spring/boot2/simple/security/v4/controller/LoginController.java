@@ -5,7 +5,6 @@ import com.example.spring.boot2.simple.security.v4.web.savedrequest.HttpSessionR
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,11 +19,12 @@ public class LoginController {
 
     private HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
 
-    @GetMapping("/login")
-    public String getLoginPage() {
-        return "login";
-    }
-
+    /**
+     * MVC config request mapping to "POST /login", should set usernamePasswordAuthenticationFilter.continueChainBeforeSuccessfulAuthentication = true
+     * <pre>
+     *     usernamePasswordAuthenticationFilter.setContinueChainBeforeSuccessfulAuthentication(true);
+     * </pre>
+     */
     @PostMapping("/login")
     public String postUserLogin(HttpServletRequest request) {
         LOGGER.info("post to login page");
