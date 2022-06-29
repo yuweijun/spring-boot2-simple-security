@@ -1,7 +1,7 @@
-package com.example.spring.boot2.simple.security.v3.controller;
+package com.example.spring.boot2.simple.security.v4.controller;
 
-import com.example.spring.boot2.simple.security.v3.web.savedrequest.DefaultSavedRequest;
-import com.example.spring.boot2.simple.security.v3.web.savedrequest.HttpSessionRequestCache;
+import com.example.spring.boot2.simple.security.v4.web.savedrequest.DefaultSavedRequest;
+import com.example.spring.boot2.simple.security.v4.web.savedrequest.HttpSessionRequestCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

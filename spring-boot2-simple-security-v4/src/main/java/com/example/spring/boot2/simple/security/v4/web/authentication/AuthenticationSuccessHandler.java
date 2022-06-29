@@ -1,6 +1,6 @@
-package com.example.spring.boot2.simple.security.v3.web.authentication;
+package com.example.spring.boot2.simple.security.v4.web.authentication;
 
-import com.example.spring.boot2.simple.security.v3.core.Authentication;
+import com.example.spring.boot2.simple.security.v4.core.Authentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

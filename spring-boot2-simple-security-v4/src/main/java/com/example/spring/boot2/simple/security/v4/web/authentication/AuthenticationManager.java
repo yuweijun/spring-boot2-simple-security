@@ -1,10 +1,10 @@
-package com.example.spring.boot2.simple.security.v2.web.authentication;
+package com.example.spring.boot2.simple.security.v4.web.authentication;
 
-import com.example.spring.boot2.simple.security.v2.core.userdetails.UserDetailsService;
-import com.example.spring.boot2.simple.security.v2.core.Authentication;
-import com.example.spring.boot2.simple.security.v2.core.AuthenticationException;
-import com.example.spring.boot2.simple.security.v2.core.userdetails.User;
-import com.example.spring.boot2.simple.security.v2.crypto.password.PasswordEncoder;
+import com.example.spring.boot2.simple.security.v4.core.userdetails.UserDetailsService;
+import com.example.spring.boot2.simple.security.v4.core.Authentication;
+import com.example.spring.boot2.simple.security.v4.core.AuthenticationException;
+import com.example.spring.boot2.simple.security.v4.core.userdetails.User;
+import com.example.spring.boot2.simple.security.v4.crypto.password.PasswordEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

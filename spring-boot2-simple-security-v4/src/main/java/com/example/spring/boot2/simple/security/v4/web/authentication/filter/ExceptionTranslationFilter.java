@@ -1,12 +1,12 @@
-package com.example.spring.boot2.simple.security.v3.web.authentication.filter;
+package com.example.spring.boot2.simple.security.v4.web.authentication.filter;
 
-import com.example.spring.boot2.simple.security.v3.core.Authentication;
-import com.example.spring.boot2.simple.security.v3.core.AuthenticationException;
-import com.example.spring.boot2.simple.security.v3.core.context.SecurityContextHolder;
-import com.example.spring.boot2.simple.security.v3.web.access.AccessDeniedException;
-import com.example.spring.boot2.simple.security.v3.web.access.AccessDeniedHandler;
-import com.example.spring.boot2.simple.security.v3.web.authentication.LoginUrlAuthenticationEntryPoint;
-import com.example.spring.boot2.simple.security.v3.web.savedrequest.HttpSessionRequestCache;
+import com.example.spring.boot2.simple.security.v4.core.Authentication;
+import com.example.spring.boot2.simple.security.v4.core.AuthenticationException;
+import com.example.spring.boot2.simple.security.v4.core.context.SecurityContextHolder;
+import com.example.spring.boot2.simple.security.v4.web.access.AccessDeniedException;
+import com.example.spring.boot2.simple.security.v4.web.access.AccessDeniedHandler;
+import com.example.spring.boot2.simple.security.v4.web.authentication.LoginUrlAuthenticationEntryPoint;
+import com.example.spring.boot2.simple.security.v4.web.savedrequest.HttpSessionRequestCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.GenericFilterBean;

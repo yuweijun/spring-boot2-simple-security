@@ -1,14 +1,14 @@
-package com.example.spring.boot2.simple.security.v3.web.authentication.filter;
+package com.example.spring.boot2.simple.security.v4.web.authentication.filter;
 
-import com.example.spring.boot2.simple.security.v3.core.Authentication;
-import com.example.spring.boot2.simple.security.v3.core.context.SecurityContextHolder;
-import com.example.spring.boot2.simple.security.v3.web.authentication.AuthenticationManager;
-import com.example.spring.boot2.simple.security.v3.web.authentication.AuthenticationSuccessHandler;
-import com.example.spring.boot2.simple.security.v3.web.util.matcher.RegexRequestMatcher;
-import com.example.spring.boot2.simple.security.v3.core.AuthenticationException;
-import com.example.spring.boot2.simple.security.v3.core.UsernamePasswordAuthenticationToken;
-import com.example.spring.boot2.simple.security.v3.core.context.SecurityContext;
-import com.example.spring.boot2.simple.security.v3.web.authentication.AuthenticationFailureHandler;
+import com.example.spring.boot2.simple.security.v4.core.Authentication;
+import com.example.spring.boot2.simple.security.v4.core.context.SecurityContextHolder;
+import com.example.spring.boot2.simple.security.v4.web.authentication.AuthenticationManager;
+import com.example.spring.boot2.simple.security.v4.web.authentication.AuthenticationSuccessHandler;
+import com.example.spring.boot2.simple.security.v4.web.util.matcher.RegexRequestMatcher;
+import com.example.spring.boot2.simple.security.v4.core.AuthenticationException;
+import com.example.spring.boot2.simple.security.v4.core.UsernamePasswordAuthenticationToken;
+import com.example.spring.boot2.simple.security.v4.core.context.SecurityContext;
+import com.example.spring.boot2.simple.security.v4.web.authentication.AuthenticationFailureHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.GenericFilterBean;

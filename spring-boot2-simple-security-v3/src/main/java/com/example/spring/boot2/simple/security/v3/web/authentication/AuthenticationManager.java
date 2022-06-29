@@ -38,6 +38,7 @@ public class AuthenticationManager {
                 authentication.setAuthenticated(true);
                 final Collection<String> authorities = user.getAuthorities();
                 LOGGER.info("AuthenticationManager#authenticate() for : {}", authorities);
+                authentication.getAuthorities().addAll(authorities);
                 return authentication;
             } else {
                 throw new AuthenticationException("user authenticate failed");

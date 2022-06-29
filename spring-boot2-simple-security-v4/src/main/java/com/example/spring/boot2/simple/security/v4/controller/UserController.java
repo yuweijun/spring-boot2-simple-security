@@ -1,9 +1,9 @@
-package com.example.spring.boot2.simple.security.v3.controller;
+package com.example.spring.boot2.simple.security.v4.controller;
 
-import com.example.spring.boot2.simple.security.v3.core.Authentication;
-import com.example.spring.boot2.simple.security.v3.core.AuthenticationException;
-import com.example.spring.boot2.simple.security.v3.core.context.SecurityContext;
-import com.example.spring.boot2.simple.security.v3.core.context.SecurityContextHolder;
+import com.example.spring.boot2.simple.security.v4.core.Authentication;
+import com.example.spring.boot2.simple.security.v4.core.AuthenticationException;
+import com.example.spring.boot2.simple.security.v4.core.context.SecurityContext;
+import com.example.spring.boot2.simple.security.v4.core.context.SecurityContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
