@@ -18,6 +18,7 @@ UsernamePasswordAuthenticationFilter
 HttpSessionSecurityContextRepository
 SecurityContextRepository
 AuthenticationProvider
+DaoAuthenticationProvider
  
 # request mapping to "POST /login" config
 

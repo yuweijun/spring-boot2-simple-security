@@ -1,14 +1,15 @@
-package com.example.spring.boot2.simple.security.v3.web.authentication.filter;
+package com.example.spring.boot2.simple.security.v5.web.authentication.filter;
 
-import com.example.spring.boot2.simple.security.v3.core.Authentication;
-import com.example.spring.boot2.simple.security.v3.core.AuthenticationException;
-import com.example.spring.boot2.simple.security.v3.core.UsernamePasswordAuthenticationToken;
-import com.example.spring.boot2.simple.security.v3.core.context.SecurityContext;
-import com.example.spring.boot2.simple.security.v3.core.context.SecurityContextHolder;
-import com.example.spring.boot2.simple.security.v3.web.authentication.AuthenticationFailureHandler;
-import com.example.spring.boot2.simple.security.v3.web.authentication.AuthenticationManager;
-import com.example.spring.boot2.simple.security.v3.web.authentication.AuthenticationSuccessHandler;
-import com.example.spring.boot2.simple.security.v3.web.util.matcher.RegexRequestMatcher;
+import com.example.spring.boot2.simple.security.v5.core.Authentication;
+import com.example.spring.boot2.simple.security.v5.core.AuthenticationException;
+import com.example.spring.boot2.simple.security.v5.core.UsernamePasswordAuthenticationToken;
+import com.example.spring.boot2.simple.security.v5.core.context.SecurityContext;
+import com.example.spring.boot2.simple.security.v5.core.context.SecurityContextHolder;
+import com.example.spring.boot2.simple.security.v5.web.authentication.AuthenticationFailureHandler;
+import com.example.spring.boot2.simple.security.v5.web.authentication.AuthenticationManager;
+import com.example.spring.boot2.simple.security.v5.web.authentication.AuthenticationSuccessHandler;
+import com.example.spring.boot2.simple.security.v5.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import com.example.spring.boot2.simple.security.v5.web.util.matcher.RegexRequestMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.GenericFilterBean;
@@ -26,14 +27,36 @@ public class UsernamePasswordAuthenticationFilter extends GenericFilterBean {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UsernamePasswordAuthenticationFilter.class);
 
+    public static final String SPRING_SECURITY_FORM_USERNAME_KEY = "username";
+
+    public static final String SPRING_SECURITY_FORM_PASSWORD_KEY = "password";
+
+    private String usernameParameter = SPRING_SECURITY_FORM_USERNAME_KEY;
+
+    private String passwordParameter = SPRING_SECURITY_FORM_PASSWORD_KEY;
+
+    private boolean continueChainBeforeSuccessfulAuthentication = false;
+
     private AuthenticationManager authenticationManager;
 
-    private AuthenticationSuccessHandler successHandler = new AuthenticationSuccessHandler();
+    private AuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
 
     private AuthenticationFailureHandler failureHandler = new AuthenticationFailureHandler();
 
     public void setAuthenticationManager(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
+    }
+
+    public final String getUsernameParameter() {
+        return usernameParameter;
+    }
+
+    public final String getPasswordParameter() {
+        return passwordParameter;
+    }
+
+    public void setContinueChainBeforeSuccessfulAuthentication(boolean continueChainBeforeSuccessfulAuthentication) {
+        this.continueChainBeforeSuccessfulAuthentication = continueChainBeforeSuccessfulAuthentication;
     }
 
     @Override
@@ -60,8 +83,10 @@ public class UsernamePasswordAuthenticationFilter extends GenericFilterBean {
                     request.changeSessionId();
                 }
 
-                chain.doFilter(request, response);
-
+                if (continueChainBeforeSuccessfulAuthentication) {
+                    // stop chain filter after authenticate successfully
+                    chain.doFilter(request, response);
+                }
                 successfulAuthentication(request, response, chain, authenticationResult);
             }
         } catch (AuthenticationException failed) {
@@ -113,7 +138,8 @@ public class UsernamePasswordAuthenticationFilter extends GenericFilterBean {
         return request.getParameter(parameter);
     }
 
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication)
+        throws IOException, ServletException {
         LOGGER.debug("Updated SecurityContextHolder to contain : {}", authentication);
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);

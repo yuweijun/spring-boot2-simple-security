@@ -1,26 +1,26 @@
-package com.example.spring.boot2.simple.security.v4.config;
+package com.example.spring.boot2.simple.security.v5.config;
 
-import com.example.spring.boot2.simple.security.v4.core.userdetails.InMemoryUserDetailsService;
-import com.example.spring.boot2.simple.security.v4.core.userdetails.User;
-import com.example.spring.boot2.simple.security.v4.core.userdetails.UserDetailsService;
-import com.example.spring.boot2.simple.security.v4.crypto.password.PasswordEncoder;
-import com.example.spring.boot2.simple.security.v4.web.DefaultSecurityFilterChain;
-import com.example.spring.boot2.simple.security.v4.web.FilterChainProxy;
-import com.example.spring.boot2.simple.security.v4.web.SecurityFilterChain;
-import com.example.spring.boot2.simple.security.v4.web.authentication.AuthenticationManager;
-import com.example.spring.boot2.simple.security.v4.web.authentication.dao.DaoAuthenticationProvider;
-import com.example.spring.boot2.simple.security.v4.web.authentication.filter.ExceptionTranslationFilter;
-import com.example.spring.boot2.simple.security.v4.web.authentication.filter.RequestCacheAwareFilter;
-import com.example.spring.boot2.simple.security.v4.web.authentication.filter.SecurityContextPersistenceFilter;
-import com.example.spring.boot2.simple.security.v4.web.authentication.filter.UsernamePasswordAuthenticationFilter;
-import com.example.spring.boot2.simple.security.v4.web.authentication.logout.LogoutFilter;
-import com.example.spring.boot2.simple.security.v4.web.authentication.logout.SecurityContextLogoutHandler;
-import com.example.spring.boot2.simple.security.v4.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
-import com.example.spring.boot2.simple.security.v4.web.authentication.ui.DefaultLoginPageGeneratingFilter;
-import com.example.spring.boot2.simple.security.v4.web.authentication.ui.DefaultLogoutPageGeneratingFilter;
-import com.example.spring.boot2.simple.security.v4.web.util.matcher.AnyRequestMatcher;
-import com.example.spring.boot2.simple.security.v4.web.util.matcher.RegexRequestMatcher;
-import com.example.spring.boot2.simple.security.v4.web.util.matcher.RequestMatcher;
+import com.example.spring.boot2.simple.security.v5.core.userdetails.InMemoryUserDetailsService;
+import com.example.spring.boot2.simple.security.v5.core.userdetails.User;
+import com.example.spring.boot2.simple.security.v5.core.userdetails.UserDetailsService;
+import com.example.spring.boot2.simple.security.v5.crypto.password.PasswordEncoder;
+import com.example.spring.boot2.simple.security.v5.web.DefaultSecurityFilterChain;
+import com.example.spring.boot2.simple.security.v5.web.FilterChainProxy;
+import com.example.spring.boot2.simple.security.v5.web.SecurityFilterChain;
+import com.example.spring.boot2.simple.security.v5.web.authentication.AuthenticationManager;
+import com.example.spring.boot2.simple.security.v5.web.authentication.dao.DaoAuthenticationProvider;
+import com.example.spring.boot2.simple.security.v5.web.authentication.filter.ExceptionTranslationFilter;
+import com.example.spring.boot2.simple.security.v5.web.authentication.filter.RequestCacheAwareFilter;
+import com.example.spring.boot2.simple.security.v5.web.authentication.filter.SecurityContextPersistenceFilter;
+import com.example.spring.boot2.simple.security.v5.web.authentication.filter.UsernamePasswordAuthenticationFilter;
+import com.example.spring.boot2.simple.security.v5.web.authentication.logout.LogoutFilter;
+import com.example.spring.boot2.simple.security.v5.web.authentication.logout.SecurityContextLogoutHandler;
+import com.example.spring.boot2.simple.security.v5.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
+import com.example.spring.boot2.simple.security.v5.web.authentication.ui.DefaultLoginPageGeneratingFilter;
+import com.example.spring.boot2.simple.security.v5.web.authentication.ui.DefaultLogoutPageGeneratingFilter;
+import com.example.spring.boot2.simple.security.v5.web.util.matcher.AnyRequestMatcher;
+import com.example.spring.boot2.simple.security.v5.web.util.matcher.RegexRequestMatcher;
+import com.example.spring.boot2.simple.security.v5.web.util.matcher.RequestMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -59,7 +59,7 @@ public class WebSecurityConfiguration {
 
     private final DefaultLogoutPageGeneratingFilter defaultLogoutPageGeneratingFilter = new DefaultLogoutPageGeneratingFilter();
 
-    private final  SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
+    private final SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
 
     private final SimpleUrlLogoutSuccessHandler simpleUrlLogoutSuccessHandler = new SimpleUrlLogoutSuccessHandler();
 
@@ -117,8 +117,6 @@ public class WebSecurityConfiguration {
         LOGGER.info("config bean : {}", DEFAULT_FILTER_NAME);
         final FilterChainProxy filterChainProxy = new FilterChainProxy();
         usernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManager());
-        // set "continueChainBeforeSuccessfulAuthentication = true" because POST "/login" method has been defined in LoginController
-        usernamePasswordAuthenticationFilter.setContinueChainBeforeSuccessfulAuthentication(true);
         filterChainProxy.setChains(getFilterChains());
         return filterChainProxy;
     }

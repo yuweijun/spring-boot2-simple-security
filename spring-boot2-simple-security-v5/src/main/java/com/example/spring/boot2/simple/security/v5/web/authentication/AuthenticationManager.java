@@ -1,7 +1,7 @@
-package com.example.spring.boot2.simple.security.v4.web.authentication;
+package com.example.spring.boot2.simple.security.v5.web.authentication;
 
-import com.example.spring.boot2.simple.security.v4.core.Authentication;
-import com.example.spring.boot2.simple.security.v4.core.AuthenticationException;
+import com.example.spring.boot2.simple.security.v5.core.Authentication;
+import com.example.spring.boot2.simple.security.v5.core.AuthenticationException;
 
 /**
  * @author yuweijun 2022-06-25.

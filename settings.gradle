@@ -8,4 +8,5 @@ include(':spring-boot2-simple-security-v1')
 include(':spring-boot2-simple-security-v2')
 include(':spring-boot2-simple-security-v3')
 include(':spring-boot2-simple-security-v4')
+include(':spring-boot2-simple-security-v5')
 
