@@ -9,16 +9,11 @@ import java.util.Collection;
  * @since 2022-07-06.
  */
 public class InterceptorStatusToken {
-    // ~ Instance fields
-    // ================================================================================================
 
     private SecurityContext securityContext;
     private Collection<ConfigAttribute> attr;
     private Object secureObject;
     private boolean contextHolderRefreshRequired;
-
-    // ~ Constructors
-    // ===================================================================================================
 
     public InterceptorStatusToken(SecurityContext securityContext,
         boolean contextHolderRefreshRequired, Collection<ConfigAttribute> attributes,
@@ -28,9 +23,6 @@ public class InterceptorStatusToken {
         this.attr = attributes;
         this.secureObject = secureObject;
     }
-
-    // ~ Methods
-    // ========================================================================================================
 
     public Collection<ConfigAttribute> getAttributes() {
         return attr;

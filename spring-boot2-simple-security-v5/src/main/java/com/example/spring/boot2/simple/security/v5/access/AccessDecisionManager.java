@@ -10,12 +10,6 @@ import java.util.Collection;
  */
 public interface AccessDecisionManager {
 
-    int ACCESS_GRANTED = 1;
-
-    int ACCESS_ABSTAIN = 0;
-
-    int ACCESS_DENIED = -1;
-
     void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException;
 
 }

@@ -17,16 +17,11 @@ import java.lang.reflect.Proxy;
  */
 public class FilterInvocation {
 
-    static final FilterChain DUMMY_CHAIN = (req, res) -> {
-        throw new UnsupportedOperationException("Dummy filter chain");
-    };
-
     private FilterChain chain;
     private HttpServletRequest request;
     private HttpServletResponse response;
 
-    public FilterInvocation(ServletRequest request, ServletResponse response,
-        FilterChain chain) {
+    public FilterInvocation(ServletRequest request, ServletResponse response, FilterChain chain) {
         if ((request == null) || (response == null) || (chain == null)) {
             throw new IllegalArgumentException("Cannot pass null values to constructor");
         }

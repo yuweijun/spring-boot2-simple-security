@@ -1,5 +1,15 @@
 package com.example.spring.boot2.simple.security.v5.config;
 
+import com.example.spring.boot2.simple.security.v5.access.AccessDecisionManager;
+import com.example.spring.boot2.simple.security.v5.access.AccessDecisionVoter;
+import com.example.spring.boot2.simple.security.v5.access.ConfigAttribute;
+import com.example.spring.boot2.simple.security.v5.access.expression.DefaultFilterInvocationSecurityMetadataSource;
+import com.example.spring.boot2.simple.security.v5.access.expression.DefaultWebSecurityExpressionHandler;
+import com.example.spring.boot2.simple.security.v5.access.expression.WebExpressionConfigAttribute;
+import com.example.spring.boot2.simple.security.v5.access.expression.WebExpressionVoter;
+import com.example.spring.boot2.simple.security.v5.access.intercept.FilterInvocationSecurityMetadataSource;
+import com.example.spring.boot2.simple.security.v5.access.intercept.FilterSecurityInterceptor;
+import com.example.spring.boot2.simple.security.v5.access.vote.AffirmativeBasedDecisionManager;
 import com.example.spring.boot2.simple.security.v5.core.userdetails.InMemoryUserDetailsService;
 import com.example.spring.boot2.simple.security.v5.core.userdetails.User;
 import com.example.spring.boot2.simple.security.v5.core.userdetails.UserDetailsService;
@@ -27,11 +37,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.web.servlet.DelegatingFilterProxyRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedFilter;
 import org.springframework.context.annotation.Bean;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class WebSecurityConfiguration {
@@ -144,6 +158,8 @@ public class WebSecurityConfiguration {
         authorizeFilters.add(defaultLogoutPageGeneratingFilter);
         authorizeFilters.add(requestCacheAwareFilter);
 
+        authorizeFilters.add(filterSecurityInterceptor());
+
         for (RequestMatcher authorizeRequest : authorizeRequestMatchers) {
             chains.add(new DefaultSecurityFilterChain(authorizeRequest, authorizeFilters));
         }
@@ -193,4 +209,41 @@ public class WebSecurityConfiguration {
         return registration;
     }
 
+    @Bean
+    public AccessDecisionManager accessDecisionManager() {
+        AffirmativeBasedDecisionManager accessDecisionManager = new AffirmativeBasedDecisionManager();
+        List<AccessDecisionVoter<?>> decisionVoters = new ArrayList<>();
+        accessDecisionManager.setDecisionVoters(decisionVoters);
+
+        WebExpressionVoter webExpressionVoter = new WebExpressionVoter();
+        decisionVoters.add(webExpressionVoter);
+
+        return accessDecisionManager;
+    }
+
+    private FilterSecurityInterceptor filterSecurityInterceptor() {
+        FilterSecurityInterceptor securityInterceptor = new FilterSecurityInterceptor();
+        securityInterceptor.setAccessDecisionManager(accessDecisionManager());
+        securityInterceptor.setAuthenticationManager(authenticationManager());
+        securityInterceptor.setSecurityMetadataSource(filterInvocationSecurityMetadataSource());
+        return securityInterceptor;
+    }
+
+    private FilterInvocationSecurityMetadataSource filterInvocationSecurityMetadataSource() {
+        DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
+        final ExpressionParser expressionParser = expressionHandler.getExpressionParser();
+        final Expression expression = expressionParser.parseExpression("hasAnyRole('ADMIN', 'USER')");
+        WebExpressionConfigAttribute webExpressionConfigAttribute = new WebExpressionConfigAttribute(expression);
+
+        Collection<ConfigAttribute> attributes = new ArrayList<>();
+        attributes.add(webExpressionConfigAttribute);
+
+        LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> requestMap = new LinkedHashMap<>();
+        final List<RequestMatcher> authorizeRequestMatchers = getAuthorizeRequestMatchers();
+        for (RequestMatcher authorizeRequestMatcher : authorizeRequestMatchers) {
+            requestMap.put(authorizeRequestMatcher, attributes);
+        }
+
+        return new DefaultFilterInvocationSecurityMetadataSource(requestMap);
+    }
 }

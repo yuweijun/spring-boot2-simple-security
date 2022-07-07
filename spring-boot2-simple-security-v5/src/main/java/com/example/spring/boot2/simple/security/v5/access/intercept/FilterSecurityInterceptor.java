@@ -3,9 +3,11 @@ package com.example.spring.boot2.simple.security.v5.access.intercept;
 import com.example.spring.boot2.simple.security.v5.access.AccessDecisionManager;
 import com.example.spring.boot2.simple.security.v5.access.ConfigAttribute;
 import com.example.spring.boot2.simple.security.v5.core.Authentication;
+import com.example.spring.boot2.simple.security.v5.core.AuthenticationException;
 import com.example.spring.boot2.simple.security.v5.core.context.SecurityContextHolder;
 import com.example.spring.boot2.simple.security.v5.web.FilterInvocation;
 import com.example.spring.boot2.simple.security.v5.web.access.AccessDeniedException;
+import com.example.spring.boot2.simple.security.v5.web.authentication.AuthenticationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -18,7 +20,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * @since 2022-07-06.
@@ -29,8 +30,20 @@ public class FilterSecurityInterceptor extends GenericFilterBean implements Filt
 
     private AccessDecisionManager accessDecisionManager;
 
-    public AccessDecisionManager getAccessDecisionManager() {
-        return accessDecisionManager;
+    private AuthenticationManager authenticationManager;
+
+    private FilterInvocationSecurityMetadataSource securityMetadataSource;
+
+    public void setAccessDecisionManager(AccessDecisionManager accessDecisionManager) {
+        this.accessDecisionManager = accessDecisionManager;
+    }
+
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
+    public void setSecurityMetadataSource(FilterInvocationSecurityMetadataSource securityMetadataSource) {
+        this.securityMetadataSource = securityMetadataSource;
     }
 
     @Override
@@ -40,7 +53,6 @@ public class FilterSecurityInterceptor extends GenericFilterBean implements Filt
     }
 
     public void invoke(FilterInvocation fi) throws IOException, ServletException {
-
         InterceptorStatusToken token = beforeInvocation(fi);
 
         try {
@@ -54,35 +66,32 @@ public class FilterSecurityInterceptor extends GenericFilterBean implements Filt
 
     protected InterceptorStatusToken beforeInvocation(Object object) {
         Assert.notNull(object, "Object was null");
-        Collection<ConfigAttribute> attributes = Collections.EMPTY_LIST;
+        Collection<ConfigAttribute> attributes = this.securityMetadataSource.getAttributes(object);
 
-        // Collection<ConfigAttribute> attributes = this.obtainSecurityMetadataSource().getAttributes(object);
-        //
-        // if (attributes == null || attributes.isEmpty()) {
-        //     logger.debug("Public object - authentication not attempted");
-        //
-        //     return null; // no further work post-invocation
-        // }
-        // LOGGER.debug("Secure object: " + object + "; Attributes: " + attributes);
+        if (attributes == null || attributes.isEmpty()) {
+            logger.debug("Public object - authentication not attempted");
 
-        if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            throw new AccessDeniedException("An Authentication object was not found in the SecurityContext");
+            return null; // no further work post-invocation
         }
 
-        Authentication authenticated = authenticateIfRequired();
+        LOGGER.debug("Secure object: " + object + "; Attributes: " + attributes);
 
-        // Attempt authorization
+        // authentication
+        Authentication authentication = authenticateIfRequired();
+
         try {
-            this.accessDecisionManager.decide(authenticated, object, attributes);
+            // authorization
+            this.accessDecisionManager.decide(authentication, object, attributes);
         } catch (AccessDeniedException accessDeniedException) {
+            LOGGER.error("authentication access denied : {}", authentication);
             throw accessDeniedException;
         }
 
         LOGGER.debug("Authorization successful");
 
         // Attempt to run as a different user
-        // Authentication runAs = this.runAsManager.buildRunAs(authenticated, object, attributes);
-        LOGGER.debug("RunAsManager did not change Authentication object");
+        // Authentication runAs = this.runAsManager.buildRunAs(authentication, object, attributes);
+        // LOGGER.debug("RunAsManager did not change Authentication object");
 
         // no further work post-invocation
         return new InterceptorStatusToken(SecurityContextHolder.getContext(), false, attributes, object);
@@ -101,6 +110,10 @@ public class FilterSecurityInterceptor extends GenericFilterBean implements Filt
     }
 
     private Authentication authenticateIfRequired() {
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            throw new AuthenticationException("An Authentication object was not found in the SecurityContext");
+        }
+
         return SecurityContextHolder.getContext().getAuthentication();
     }
 }
