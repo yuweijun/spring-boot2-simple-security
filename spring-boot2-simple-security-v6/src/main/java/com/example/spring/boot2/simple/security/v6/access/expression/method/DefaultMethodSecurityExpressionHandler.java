@@ -27,14 +27,11 @@ public class DefaultMethodSecurityExpressionHandler extends AbstractSecurityExpr
 
     private ParameterNameDiscoverer parameterNameDiscoverer = new DefaultSecurityParameterNameDiscoverer();
 
-    private String defaultRolePrefix = "ROLE_";
-
     public DefaultMethodSecurityExpressionHandler() {
     }
 
     @Override
-    public StandardEvaluationContext createEvaluationContextInternal(Authentication auth,
-        MethodInvocation mi) {
+    public StandardEvaluationContext createEvaluationContextInternal(Authentication auth, MethodInvocation mi) {
         return new MethodSecurityEvaluationContext(auth, mi, getParameterNameDiscoverer());
     }
 
@@ -55,6 +52,7 @@ public class DefaultMethodSecurityExpressionHandler extends AbstractSecurityExpr
         LOGGER.debug("Filtering with expression: {}", filterExpression.getExpressionString());
 
         if (filterTarget instanceof Collection) {
+            @SuppressWarnings("unchecked")
             Collection<Object> collection = (Collection<Object>) filterTarget;
             retainList = new ArrayList<>(collection.size());
 

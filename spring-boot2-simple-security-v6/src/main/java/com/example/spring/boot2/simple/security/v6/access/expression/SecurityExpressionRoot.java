@@ -66,7 +66,9 @@ public abstract class SecurityExpressionRoot {
     }
 
     public final boolean hasAnyAuthority(String... authorities) {
-        LOGGER.debug("has any authority : {}", authorities);
+        for (String authority : authorities) {
+            LOGGER.debug("has any authority : {}", authority);
+        }
         return hasAnyAuthorityName(null, authorities);
     }
 
@@ -76,7 +78,9 @@ public abstract class SecurityExpressionRoot {
     }
 
     public final boolean hasAnyRole(String... roles) {
-        LOGGER.debug("has any role : {}", roles);
+        for (String role : roles) {
+            LOGGER.debug("has any authority : {}", role);
+        }
         return hasAnyAuthorityName(defaultRolePrefix, roles);
     }
 
@@ -98,10 +102,12 @@ public abstract class SecurityExpressionRoot {
     }
 
     public final boolean permitAll() {
+        LOGGER.debug("permitAll");
         return true;
     }
 
     public final boolean denyAll() {
+        LOGGER.debug("denyAll");
         return false;
     }
 

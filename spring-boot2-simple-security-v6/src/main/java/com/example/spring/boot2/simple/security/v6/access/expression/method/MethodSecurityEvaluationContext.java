@@ -23,6 +23,7 @@ class MethodSecurityEvaluationContext extends MethodBasedEvaluationContext {
     }
 
     private static Method getSpecificMethod(MethodInvocation mi) {
+        LOGGER.info("MethodInvocation : {}", mi);
         return AopUtils.getMostSpecificMethod(mi.getMethod(), AopProxyUtils.ultimateTargetClass(mi.getThis()));
     }
 }

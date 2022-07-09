@@ -11,6 +11,4 @@ public interface SecurityMetadataSource {
 
     Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException;
 
-    Collection<ConfigAttribute> getAllConfigAttributes();
-
 }

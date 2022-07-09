@@ -1,7 +1,9 @@
 package com.example.spring.boot2.simple.security.v6.controller;
 
+import com.example.spring.boot2.simple.security.v6.access.prepost.PreAuthorize;
 import com.example.spring.boot2.simple.security.v6.core.Authentication;
 import com.example.spring.boot2.simple.security.v6.core.AuthenticationException;
+import com.example.spring.boot2.simple.security.v6.core.UsernamePasswordAuthenticationToken;
 import com.example.spring.boot2.simple.security.v6.core.context.SecurityContext;
 import com.example.spring.boot2.simple.security.v6.core.context.SecurityContextHolder;
 import org.slf4j.Logger;
@@ -35,6 +37,17 @@ public class UserController {
         if (authentication == null) {
             throw new AuthenticationException("user is not authentication");
         }
+        return authentication;
+    }
+
+    @PreAuthorize("permitAll")
+    @GetMapping("/permitAll")
+    public Authentication permitAll() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return new UsernamePasswordAuthenticationToken("anonymous user", "password");
+        }
+
         return authentication;
     }
 }

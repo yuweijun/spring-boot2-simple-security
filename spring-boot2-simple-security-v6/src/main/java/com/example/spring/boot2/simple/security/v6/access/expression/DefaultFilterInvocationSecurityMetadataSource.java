@@ -4,8 +4,6 @@ import com.example.spring.boot2.simple.security.v6.access.ConfigAttribute;
 import com.example.spring.boot2.simple.security.v6.access.intercept.FilterInvocationSecurityMetadataSource;
 import com.example.spring.boot2.simple.security.v6.web.FilterInvocation;
 import com.example.spring.boot2.simple.security.v6.web.util.matcher.RequestMatcher;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
@@ -18,8 +16,6 @@ import java.util.Set;
  * @since 2022-07-07.
  */
 public class DefaultFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
-
-    protected final Log logger = LogFactory.getLog(getClass());
 
     private final Map<RequestMatcher, Collection<ConfigAttribute>> requestMap;
 
@@ -37,6 +33,7 @@ public class DefaultFilterInvocationSecurityMetadataSource implements FilterInvo
         return allAttributes;
     }
 
+    @Override
     public Collection<ConfigAttribute> getAttributes(Object object) {
         final HttpServletRequest request = ((FilterInvocation) object).getRequest();
         for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : requestMap.entrySet()) {
@@ -44,6 +41,7 @@ public class DefaultFilterInvocationSecurityMetadataSource implements FilterInvo
                 return entry.getValue();
             }
         }
+
         return null;
     }
 
