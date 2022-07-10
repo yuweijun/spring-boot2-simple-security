@@ -3,7 +3,6 @@ package com.example.spring.boot2.simple.security.v6.controller;
 import com.example.spring.boot2.simple.security.v6.access.prepost.PreAuthorize;
 import com.example.spring.boot2.simple.security.v6.core.Authentication;
 import com.example.spring.boot2.simple.security.v6.core.AuthenticationException;
-import com.example.spring.boot2.simple.security.v6.core.UsernamePasswordAuthenticationToken;
 import com.example.spring.boot2.simple.security.v6.core.context.SecurityContext;
 import com.example.spring.boot2.simple.security.v6.core.context.SecurityContextHolder;
 import org.slf4j.Logger;
@@ -42,12 +41,31 @@ public class UserController {
 
     @PreAuthorize("permitAll")
     @GetMapping("/permitAll")
-    public Authentication permitAll() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
-            return new UsernamePasswordAuthenticationToken("anonymous user", "password");
-        }
+    public String permitAll() {
+        return "permitAll";
+    }
 
-        return authentication;
+    @PreAuthorize("denyAll")
+    @GetMapping("/denyAll")
+    public String denyAll() {
+        return "denyAll";
+    }
+
+    @PreAuthorize("permitAll()")
+    @GetMapping("/permitAllMethod")
+    public String permitAllMethod() {
+        return "permitAll()";
+    }
+
+    @PreAuthorize("hasPermission(#p0, #p1)")
+    @GetMapping("/hasPermission")
+    public String hasPermission(String target, String permission) {
+        return "hasPermission(#p0, #p1)";
+    }
+
+    @PreAuthorize("hasPermission(#target, #permission)")
+    @GetMapping("/hasPermissionWithParamName")
+    public String hasPermissionWithParamName(String target, String permission) {
+        return "hasPermission(#target, #permission)";
     }
 }

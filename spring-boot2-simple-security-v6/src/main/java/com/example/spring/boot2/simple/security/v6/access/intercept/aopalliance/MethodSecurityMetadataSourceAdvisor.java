@@ -3,9 +3,10 @@ package com.example.spring.boot2.simple.security.v6.access.intercept.aopalliance
 import com.example.spring.boot2.simple.security.v6.access.method.MethodSecurityMetadataSource;
 import org.aopalliance.aop.Advice;
 import org.aopalliance.intercept.MethodInterceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractPointcutAdvisor;
-import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -13,18 +14,16 @@ import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.util.Collection;
 
 /**
  * @since 2022-07-09.
  */
 public class MethodSecurityMetadataSourceAdvisor extends AbstractPointcutAdvisor implements BeanFactoryAware {
 
-    private transient MethodSecurityMetadataSource attributeSource;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodSecurityMetadataSourceAdvisor.class);
+
     private transient MethodInterceptor interceptor;
-    private final Pointcut pointcut = new MethodSecurityMetadataSourcePointcut();
+    private final MethodSecurityMetadataSourcePointcut pointcut;
     private BeanFactory beanFactory;
     private final String adviceBeanName;
     private final String metadataSourceBeanName;
@@ -41,14 +40,16 @@ public class MethodSecurityMetadataSourceAdvisor extends AbstractPointcutAdvisor
         Assert.notNull(attributeSourceBeanName, "The attributeSourceBeanName cannot be null");
 
         this.adviceBeanName = adviceBeanName;
-        this.attributeSource = attributeSource;
         this.metadataSourceBeanName = attributeSourceBeanName;
+        this.pointcut = new MethodSecurityMetadataSourcePointcut(attributeSource);
     }
 
+    @Override
     public Pointcut getPointcut() {
         return pointcut;
     }
 
+    @Override
     public Advice getAdvice() {
         synchronized (this.adviceMonitor) {
             if (interceptor == null) {
@@ -56,10 +57,12 @@ public class MethodSecurityMetadataSourceAdvisor extends AbstractPointcutAdvisor
                 Assert.state(beanFactory != null, "BeanFactory must be set to resolve 'adviceBeanName'");
                 interceptor = beanFactory.getBean(this.adviceBeanName, MethodInterceptor.class);
             }
+            LOGGER.debug("interceptor for adviceBeanName : {} is : {}", adviceBeanName, interceptor);
             return interceptor;
         }
     }
 
+    @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
     }
@@ -67,13 +70,8 @@ public class MethodSecurityMetadataSourceAdvisor extends AbstractPointcutAdvisor
     private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
         ois.defaultReadObject();
         adviceMonitor = new Object();
-        attributeSource = beanFactory.getBean(metadataSourceBeanName, MethodSecurityMetadataSource.class);
+        MethodSecurityMetadataSource attributeSource = beanFactory.getBean(metadataSourceBeanName, MethodSecurityMetadataSource.class);
+        this.pointcut.setAttributeSource(attributeSource);
     }
 
-    class MethodSecurityMetadataSourcePointcut extends StaticMethodMatcherPointcut implements Serializable {
-        public boolean matches(Method m, Class targetClass) {
-            Collection attributes = attributeSource.getAttributes(m, targetClass);
-            return attributes != null && !attributes.isEmpty();
-        }
-    }
 }

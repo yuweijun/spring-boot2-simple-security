@@ -2,8 +2,6 @@ package com.example.spring.boot2.simple.security.v6.access.prepost;
 
 import com.example.spring.boot2.simple.security.v6.access.ConfigAttribute;
 import com.example.spring.boot2.simple.security.v6.access.method.AbstractMethodSecurityMetadataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ClassUtils;
 
@@ -18,8 +16,6 @@ import java.util.Collections;
  */
 public class PrePostAnnotationSecurityMetadataSource extends AbstractMethodSecurityMetadataSource {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PrePostAnnotationSecurityMetadataSource.class);
-
     private final PrePostInvocationAttributeFactory attributeFactory;
 
     public PrePostAnnotationSecurityMetadataSource(PrePostInvocationAttributeFactory attributeFactory) {
@@ -32,12 +28,12 @@ public class PrePostAnnotationSecurityMetadataSource extends AbstractMethodSecur
             return Collections.emptyList();
         }
 
-        LOGGER.debug("Looking for Pre/Post annotations for method '" + method.getName() + "' on target class '" + targetClass + "'");
+        logger.debug("Looking for Pre/Post annotations for method '{}' on target class '{}'", method.getName(), targetClass);
         PreAuthorize preAuthorize = findAnnotation(method, targetClass, PreAuthorize.class);
 
         if (preAuthorize == null) {
             // There is no meta-data so return
-            LOGGER.info("No expression annotations found");
+            logger.info("No expression annotations found");
             return Collections.emptyList();
         }
 
@@ -61,7 +57,7 @@ public class PrePostAnnotationSecurityMetadataSource extends AbstractMethodSecur
         A annotation = AnnotationUtils.findAnnotation(specificMethod, annotationClass);
 
         if (annotation != null) {
-            LOGGER.debug(annotation + " found on specific method: " + specificMethod);
+            logger.debug(annotation + " found on specific method: " + specificMethod);
             return annotation;
         }
 
@@ -70,7 +66,7 @@ public class PrePostAnnotationSecurityMetadataSource extends AbstractMethodSecur
             annotation = AnnotationUtils.findAnnotation(method, annotationClass);
 
             if (annotation != null) {
-                LOGGER.debug(annotation + " found on: " + method);
+                logger.debug(annotation + " found on: " + method);
                 return annotation;
             }
         }
@@ -80,7 +76,7 @@ public class PrePostAnnotationSecurityMetadataSource extends AbstractMethodSecur
         annotation = AnnotationUtils.findAnnotation(specificMethod.getDeclaringClass(), annotationClass);
 
         if (annotation != null) {
-            LOGGER.debug(annotation + " found on: " + specificMethod.getDeclaringClass().getName());
+            logger.debug(annotation + " found on: " + specificMethod.getDeclaringClass().getName());
             return annotation;
         }
 

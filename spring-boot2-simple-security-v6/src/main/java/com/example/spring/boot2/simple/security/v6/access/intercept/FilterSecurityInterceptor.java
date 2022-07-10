@@ -32,15 +32,15 @@ public class FilterSecurityInterceptor extends AbstractSecurityInterceptor imple
     }
 
     public void invoke(FilterInvocation fi) throws IOException, ServletException {
-        InterceptorStatusToken token = beforeInvocation(fi);
+        InterceptorStatusToken token = super.beforeInvocation(fi);
 
         try {
             fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
         } finally {
-            finallyInvocation(token);
+            super.finallyInvocation(token);
         }
 
-        afterInvocation(token, null);
+        super.afterInvocation(token, null);
     }
 
 }

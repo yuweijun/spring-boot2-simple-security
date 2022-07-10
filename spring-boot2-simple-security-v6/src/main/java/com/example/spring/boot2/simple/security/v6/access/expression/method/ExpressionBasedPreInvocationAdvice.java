@@ -23,7 +23,7 @@ public class ExpressionBasedPreInvocationAdvice implements PreInvocationAuthoriz
         PreInvocationExpressionAttribute preAttr = (PreInvocationExpressionAttribute) attr;
         EvaluationContext ctx = expressionHandler.createEvaluationContext(authentication, mi);
         Expression preAuthorize = preAttr.getAuthorizeExpression();
-        LOGGER.info("preAuthorize is : {}", preAuthorize);
+        LOGGER.info("preAuthorize is : {}", preAuthorize.getExpressionString());
         if (preAuthorize == null) {
             return true;
         }

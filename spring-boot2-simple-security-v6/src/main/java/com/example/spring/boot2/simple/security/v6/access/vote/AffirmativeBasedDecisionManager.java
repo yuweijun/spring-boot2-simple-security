@@ -40,6 +40,7 @@ public class AffirmativeBasedDecisionManager implements AccessDecisionManager {
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException {
         int deny = 0;
         for (AccessDecisionVoter voter : getDecisionVoters()) {
+            @SuppressWarnings("unchecked")
             int result = voter.vote(authentication, object, configAttributes);
 
             LOGGER.debug("Voter '{}' returned: {}", voter, result);

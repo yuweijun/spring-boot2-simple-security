@@ -18,7 +18,9 @@ import java.lang.reflect.Proxy;
 public class FilterInvocation {
 
     private FilterChain chain;
+
     private HttpServletRequest request;
+
     private HttpServletResponse response;
 
     public FilterInvocation(ServletRequest request, ServletResponse response, FilterChain chain) {
@@ -39,16 +41,14 @@ public class FilterInvocation {
         this(contextPath, servletPath, null, null, method);
     }
 
-    public FilterInvocation(String contextPath, String servletPath, String pathInfo,
-        String query, String method) {
+    public FilterInvocation(String contextPath, String servletPath, String pathInfo, String query, String method) {
         DummyRequest request = new DummyRequest();
         if (contextPath == null) {
             contextPath = "/cp";
         }
         request.setContextPath(contextPath);
         request.setServletPath(servletPath);
-        request.setRequestURI(
-            contextPath + servletPath + (pathInfo == null ? "" : pathInfo));
+        request.setRequestURI(contextPath + servletPath + (pathInfo == null ? "" : pathInfo));
         request.setPathInfo(pathInfo);
         request.setQueryString(query);
         request.setMethod(method);

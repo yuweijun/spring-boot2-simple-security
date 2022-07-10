@@ -11,6 +11,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * {@see org.springframework.context.annotation.AspectJAutoProxyRegistrar}
+ * {@link org.springframework.boot.autoconfigure.aop.AopAutoConfiguration}
+ * {@link org.springframework.aop.config.AopConfigUtils}
+ *
  * @since 2022-07-09.
  */
 @Retention(value = RetentionPolicy.RUNTIME)

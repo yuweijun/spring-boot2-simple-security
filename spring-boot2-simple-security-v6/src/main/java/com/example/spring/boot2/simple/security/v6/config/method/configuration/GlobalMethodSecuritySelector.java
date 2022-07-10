@@ -19,6 +19,7 @@ final class GlobalMethodSecuritySelector implements ImportSelector {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalMethodSecuritySelector.class);
 
+    @Override
     public String[] selectImports(AnnotationMetadata importingClassMetadata) {
         Class<EnableGlobalMethodSecurity> annotation = EnableGlobalMethodSecurity.class;
         Map<String, Object> annotationAttributes = importingClassMetadata.getAnnotationAttributes(annotation.getName(), false);
