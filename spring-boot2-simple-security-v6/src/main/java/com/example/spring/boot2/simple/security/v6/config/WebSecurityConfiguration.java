@@ -123,8 +123,13 @@ public class WebSecurityConfiguration {
         return new PrePostAnnotationSecurityMetadataSource(attributeFactory);
     }
 
+    /**
+     * define advice bean for {@see com.example.spring.boot2.simple.security.v6.access.intercept.aopalliance.MethodSecurityMetadataSourceAdvisor}
+     */
     @Bean
     public MethodInterceptor methodSecurityInterceptor() {
+        LOGGER.info("config advice bean 'methodSecurityInterceptor' for advisor bean 'methodSecurityMetadataSourceAdvisor'");
+
         MethodSecurityInterceptor methodSecurityInterceptor = new MethodSecurityInterceptor();
         methodSecurityInterceptor.setAccessDecisionManager(accessDecisionManager());
         methodSecurityInterceptor.setSecurityMetadataSource(methodSecurityMetadataSource());

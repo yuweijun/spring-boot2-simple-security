@@ -57,7 +57,7 @@ public class PrePostAnnotationSecurityMetadataSource extends AbstractMethodSecur
         A annotation = AnnotationUtils.findAnnotation(specificMethod, annotationClass);
 
         if (annotation != null) {
-            logger.debug(annotation + " found on specific method: " + specificMethod);
+            logger.debug("{} found on specific method: {}", annotation, specificMethod);
             return annotation;
         }
 
