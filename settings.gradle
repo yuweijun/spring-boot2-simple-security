@@ -4,9 +4,9 @@
 
 rootProject.name = 'spring-boot2-simple-security'
 
-include(':spring-boot2-simple-security-v1')
-include(':spring-boot2-simple-security-v2')
-include(':spring-boot2-simple-security-v3')
-include(':spring-boot2-simple-security-v4')
-include(':spring-boot2-simple-security-v5')
-include(':spring-boot2-simple-security-v6')
+include(':v1')
+include(':v2')
+include(':v3')
+include(':v4')
+include(':v5')
+include(':v6')
